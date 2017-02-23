@@ -1,0 +1,76 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="Z_SFLIGHT_SBOOK_HOE_SRV" xml:lang="de" sap:schema-version="0000">
+            <EntityType Name="SFLIGHT" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Carrid"/>
+                    <PropertyRef Name="Connid"/>
+                    <PropertyRef Name="Fldate"/>
+                </Key>
+                <Property Name="Carrid" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Fluggesellschaft" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Connid" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Flugnummer" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Fldate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Flugdatum" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Price" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unit="Currency" sap:label="Flugpreis" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:label="Währ. d. Flugg." sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="Planetype" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Flugzeugtyp" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Seatsmax" Type="Edm.Int32" Nullable="false" sap:label="Max. Belegung Eco." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Seatsocc" Type="Edm.Int32" Nullable="false" sap:label="Belegung Eco." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Paymentsum" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="3" sap:unit="Currency" sap:label="Akt. Summe" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SeatsmaxB" Type="Edm.Int32" Nullable="false" sap:label="Max. Belegung Bus." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SeatsoccB" Type="Edm.Int32" Nullable="false" sap:label="Belegung Bus." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SeatsmaxF" Type="Edm.Int32" Nullable="false" sap:label="Max. Belegung 1st." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SeatsoccF" Type="Edm.Int32" Nullable="false" sap:label="Belegung 1st." sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="SBOOK" Relationship="Z_SFLIGHT_SBOOK_HOE_SRV.SFlight_SBook" FromRole="FromRole_SFlight_SBook" ToRole="ToRole_SFlight_SBook" sap:label="SBOOK"/>
+            </EntityType>
+            <EntityType Name="SBOOK" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Carrid"/>
+                    <PropertyRef Name="Connid"/>
+                    <PropertyRef Name="Fldate"/>
+                    <PropertyRef Name="Bookid"/>
+                </Key>
+                <Property Name="Carrid" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Fluggesellschaft" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Connid" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Flugnummer" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Fldate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Flugdatum" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Bookid" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Buchungsnummer" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Customid" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Kundennummer" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Custtype" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="G/P-Kunde" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Smoker" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Raucher" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Wunit" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Maßeinheit" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Invoice" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Rechnungsst." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Class" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Klasse" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Forcuram" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unit="Forcurkey" sap:label="Betrag" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Forcurkey" Type="Edm.String" Nullable="false" MaxLength="5" sap:label="Zahl.Währung" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="Loccuram" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unit="Loccurkey" sap:label="Betrag" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Loccurkey" Type="Edm.String" Nullable="false" MaxLength="5" sap:label="Währ. d. Flugg." sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="OrderDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Buchungsdatum" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Counter" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Verkaufsstelle" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Agencynum" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Reisebüronr." sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Cancelled" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Stornokennzeichen" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Reserved" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="reserviert" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Passname" Type="Edm.String" Nullable="false" MaxLength="25" sap:label="Passagiername" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Passform" Type="Edm.String" Nullable="false" MaxLength="15" sap:label="Anrede" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <Association Name="SFlight_SBook" sap:content-version="1" sap:label="SFlight">
+                <End Type="Z_SFLIGHT_SBOOK_HOE_SRV.SFLIGHT" Multiplicity="1" Role="FromRole_SFlight_SBook"/>
+                <End Type="Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK" Multiplicity="*" Role="ToRole_SFlight_SBook"/>
+            </Association>
+            <EntityContainer Name="Z_SFLIGHT_SBOOK_HOE_SRV_Entities" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="SBOOKSet" EntityType="Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK" sap:deletable="false" sap:searchable="true" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="SFLIGHTSet" EntityType="Z_SFLIGHT_SBOOK_HOE_SRV.SFLIGHT" sap:deletable="false" sap:searchable="true" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="SFlight_SBook_AssocSet" Association="Z_SFLIGHT_SBOOK_HOE_SRV.SFlight_SBook" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="SFLIGHTSet" Role="FromRole_SFlight_SBook"/>
+                    <End EntitySet="SBOOKSet" Role="ToRole_SFlight_SBook"/>
+                </AssociationSet>
+            </EntityContainer>
+            <atom:link
+                xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_SRV/$metadata"/>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_SRV/$metadata"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>
