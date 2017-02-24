@@ -18,7 +18,7 @@
 					</Toolbar>
 				</infoToolbar>
 				<items>
-					<ObjectListItem type="Active" press="onEditBooking" title="{Bookid}"
+					<ObjectListItem type="Active" press="onEditBooking" title="{Bookid} - {Passname}"
 						number="{ path: 'Loccuram', formatter: '.formatter.currencyValue'}"></ObjectListItem>
 				</items>
 			</List>

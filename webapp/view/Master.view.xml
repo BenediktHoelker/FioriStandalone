@@ -23,7 +23,7 @@
 				</infoToolbar>
 				<items>
 					<ObjectListItem type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelectionChange" title="{Fldate}"
-						number="{= ${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}}"></ObjectListItem>
+						number="{= Math.round((${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}) / (${Seatsmax} + ${SeatsmaxB} + ${SeatsmaxF})*100) /100 }"></ObjectListItem>
 				</items>
 			</List>
 		</semantic:content>

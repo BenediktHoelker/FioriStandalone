@@ -120,6 +120,13 @@
 					"target": [
 						"createBooking"
 					]
+				},
+				{
+					"pattern": "EditBooking/{objectPath}",
+					"name": "editBooking",
+					"target": [
+						"createBooking"
+					]
 				}
 			],
 			"targets": {

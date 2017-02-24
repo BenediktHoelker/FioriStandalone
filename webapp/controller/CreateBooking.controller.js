@@ -26,7 +26,8 @@ sap.ui.define([
 			});
 			this._oODataModel = this.getOwnerComponent().getModel();
 			this.getRouter().getRoute("createBooking").attachPatternMatched(this._onCreate, this);
-			this.getRouter().getTargets().getTarget("createBooking").attachDisplay(null, this._onEdit, this);
+			this.getRouter().getRoute("editBooking").attachPatternMatched(this._onEdit, this);
+			// this.getRouter().getTargets().getTarget("editBooking").attachDisplay(null, this._onEdit, this);
 			this.setModel(this._oODataModel, "oDataModel");
 		},
 
@@ -54,7 +55,39 @@ sap.ui.define([
 				return;
 			}
 			this.getModel("appView").setProperty("/busy", true);
+			
+			if (this._oViewModel.getProperty("/mode") === "edit") {
+				// attach to the request completed event of the batch
+				oModel.attachEventOnce("batchRequestCompleted", function(oEvent) {
+					if (that._checkIfBatchRequestSucceeded(oEvent)) {
+						that._fnUpdateSuccess();
+					} else {
+						that._fnEntityCreationFailed();
+						MessageBox.error(that._oResourceBundle.getText("updateError"));
+					}
+				});
+			}
+
 			oModel.submitChanges();
+		},
+
+		_checkIfBatchRequestSucceeded: function(oEvent) {
+			var oParams = oEvent.getParameters();
+			var aRequests = oEvent.getParameters().requests;
+			var oRequest;
+			if (oParams.success) {
+				if (aRequests) {
+					for (var i = 0; i < aRequests.length; i++) {
+						oRequest = oEvent.getParameters().requests[i];
+						if (!oRequest.success) {
+							return false;
+						}
+					}
+				}
+				return true;
+			} else {
+				return false;
+			}
 		},
 
 		/**
@@ -86,7 +119,6 @@ sap.ui.define([
 			 */
 		_onObjectMatched: function (oEvent) {
 			var oData = oEvent.getParameter("data");
-			console.log(oEvent);
 			if (oData && oData.mode === "update") {
 				this._onEdit(oEvent);
 			} else {
@@ -100,7 +132,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onEdit: function (oEvent) {
-			var oData = oEvent.getParameter("data"),
+			var oData = oEvent.getParameter("arguments"),
 				oView = this.getView();
 
 			this._oViewModel.setProperty("/mode", "edit");
@@ -108,7 +140,7 @@ sap.ui.define([
 			this._oViewModel.setProperty("/viewTitle", this._oResourceBundle.getText("editViewTitle"));
 
 			oView.bindElement({
-				path: oData.objectPath
+				path: decodeURIComponent(oData.objectPath)
 			});
 		},
 
@@ -117,7 +149,6 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the  display event
 		 * @private
 		 */
-
 		_onCreate: function (oEvent) {
 			var oView = this.getView();
 			var urlArguments = oEvent.getParameter("arguments");
@@ -217,6 +248,16 @@ sap.ui.define([
 			} else {
 				this._oViewModel.setProperty("/enableCreate", true);
 			}
+		},
+
+		/**
+		 * Handles the success of updating an object
+		 * @private
+		 */
+		_fnUpdateSuccess: function() {
+			this.getModel("appView").setProperty("/busy", false);
+			this.getView().unbindObject();
+			this.getRouter().getTargets().display("object");
 		},
 
 		/**

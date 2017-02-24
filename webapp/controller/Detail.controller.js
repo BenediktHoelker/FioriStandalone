@@ -93,23 +93,12 @@ sap.ui.define([
 		 * @public
 		 */
 		onEditBooking: function(oEvent) {
-			console.log("Edit Booking");
 			this.getModel("appView").setProperty("/addEnabled", false);
 			var oItem = oEvent.getSource();
 			var oBindingContext = oItem.getBindingContext();
-			// console.log(oBindingContext.getProperty("Bookid"));
-			// var bookingKeys = {
-			// 	Carrid: oBindingContext.getProperty("Carrid"),
-			// 	Connid: oBindingContext.getProperty("Connid"),
-			// 	Fldate: oBindingContext.getProperty("Fldate")
-			// }			
-			// console.log(bookingKeys);
-			// var bookingObjectPath = this.getModel().createKey("SFLIGHTSet", bookingKeys);
-			// this._bindView("/" + bookingObjectPath);
 			
-			this.getRouter().getTargets().display("createBooking", {
-				mode: "update",
-				objectPath: oBindingContext.getPath()
+			this.getRouter().navTo("editBooking", {
+				objectPath: encodeURIComponent(oBindingContext.getPath())
 			});
 		},
 
