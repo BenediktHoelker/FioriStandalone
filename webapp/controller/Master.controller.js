@@ -273,7 +273,6 @@ sap.ui.define([
 		onAdd: function() {
 			this.getModel("appView").setProperty("/addEnabled", false);
 			this.getRouter().getTargets().display("create");
-
 		},
 
 		/* =========================================================== */

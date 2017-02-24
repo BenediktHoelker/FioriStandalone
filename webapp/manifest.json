@@ -113,6 +113,14 @@
 						"master",
 						"object"
 					]
+				},
+				{
+					"pattern": "CreateBooking/{Carrid}/{Connid}/{Fldate}",
+					"name": "create",
+					"target": [
+						"object",
+						"create"
+					]
 				}
 			],
 			"targets": {
@@ -129,6 +137,7 @@
 				},
 				"create": {
 					"viewName": "CreateEntity",
+					"viewId": "createEntity",
 					"viewLevel": 2
 				},
 				"detailObjectNotFound": {

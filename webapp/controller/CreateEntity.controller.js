@@ -3,7 +3,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox"
 
-], function(BaseController, JSONModel, MessageBox) {
+], function (BaseController, JSONModel, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("ts.controller.CreateEntity", {
@@ -14,11 +14,8 @@ sap.ui.define([
 		/* lifecycle methods                                           */
 		/* =========================================================== */
 
-		onInit: function() {
+		onInit: function () {
 			var that = this;
-			console.log("Hallo");
-			this.getRouter().getTargets().getTarget("create").attachDisplay(null, this._onDisplay, this);
-			this._oODataModel = this.getOwnerComponent().getModel();
 			this._oResourceBundle = this.getResourceBundle();
 			this._oViewModel = new JSONModel({
 				enableCreate: false,
@@ -27,20 +24,9 @@ sap.ui.define([
 				mode: "create",
 				viewTitle: ""
 			});
-			this.setModel(this._oViewModel, "viewModel");
-
-			// Register the view with the message manager
-			sap.ui.getCore().getMessageManager().registerObject(this.getView(), true);
-			var oMessagesModel = sap.ui.getCore().getMessageManager().getMessageModel();
-			this._oBinding = new sap.ui.model.Binding(oMessagesModel, "/", oMessagesModel.getContext("/"));
-			this._oBinding.attachChange(function(oEvent) {
-				var aMessages = oEvent.getSource().getModel().getData();
-				for (var i = 0; i < aMessages.length; i++) {
-					if (aMessages[i].type === "Error" && !aMessages[i].technical) {
-						that._oViewModel.setProperty("/enableCreate", false);
-					}
-				}
-			});
+			this._oODataModel = this.getOwnerComponent().getModel();
+			this.getRouter().getRoute("create").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(this._oODataModel, "oDataModel");
 		},
 
 		/* =========================================================== */
@@ -52,7 +38,7 @@ sap.ui.define([
 		 * @function
 		 * @public
 		 */
-		onSave: function() {
+		onSave: function () {
 			var that = this,
 				oModel = this.getModel();
 
@@ -67,39 +53,7 @@ sap.ui.define([
 				return;
 			}
 			this.getModel("appView").setProperty("/busy", true);
-			console.log(this._oViewModel);
-			if (this._oViewModel.getProperty("/mode") === "edit") {
-				// attach to the request completed event of the batch
-				oModel.attachEventOnce("batchRequestCompleted", function(oEvent) {
-					if (that._checkIfBatchRequestSucceeded(oEvent)) {
-						that._fnUpdateSuccess();
-					} else {
-						that._fnEntityCreationFailed();
-						MessageBox.error(that._oResourceBundle.getText("updateError"));
-					}
-				});
-			}
-			console.log(oModel);
 			oModel.submitChanges();
-		},
-
-		_checkIfBatchRequestSucceeded: function(oEvent) {
-			var oParams = oEvent.getParameters();
-			var aRequests = oEvent.getParameters().requests;
-			var oRequest;
-			if (oParams.success) {
-				if (aRequests) {
-					for (var i = 0; i < aRequests.length; i++) {
-						oRequest = oEvent.getParameters().requests[i];
-						if (!oRequest.success) {
-							return false;
-						}
-					}
-				}
-				return true;
-			} else {
-				return false;
-			}
 		},
 
 		/**
@@ -107,7 +61,7 @@ sap.ui.define([
 		 * @function
 		 * @public
 		 */
-		onCancel: function() {
+		onCancel: function () {
 			// check if the model has been changed
 			if (this.getModel().hasPendingChanges()) {
 				// get user confirmation first
@@ -122,12 +76,38 @@ sap.ui.define([
 		/* =========================================================== */
 		/* Internal functions
 		/* =========================================================== */
+
+		/**
+			 * Binds the view to the object path and expands the aggregated line items.
+			 * @function
+			 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+			 * @private
+			 */
+		_onObjectMatched: function (oEvent) {
+			var oView = this.getView();
+			this._oViewModel.setProperty("/mode", "create");
+			this._oViewModel.setProperty("/enableCreate", true);
+			this._oViewModel.setProperty("/viewTitle", this._oResourceBundle.getText("editViewTitle"));
+
+			var oContext = this._oODataModel.createEntry("SBOOKSet", {
+				properties: {
+					Connid: decodeURIComponent(oEvent.getParameter("arguments").Connid),
+					Carrid: decodeURIComponent(oEvent.getParameter("arguments").Carrid),
+					Fldate: new Date(decodeURIComponent(oEvent.getParameter("arguments").Fldate))
+				},
+				success: this._fnEntityCreated.bind(this),
+				error: this._fnEntityCreationFailed.bind(this)
+			});
+
+			oView.setBindingContext(oContext);
+		},
+
 		/**
 		 * Navigates back in the browser history, if the entry was created by this app.
 		 * If not, it navigates to the Details page
 		 * @private
 		 */
-		_navBack: function() {
+		_navBack: function () {
 			var oHistory = sap.ui.core.routing.History.getInstance(),
 				sPreviousHash = oHistory.getPreviousHash();
 
@@ -144,14 +124,14 @@ sap.ui.define([
 		 * Opens a dialog letting the user either confirm or cancel the quit and discard of changes.
 		 * @private
 		 */
-		_showConfirmQuitChanges: function() {
+		_showConfirmQuitChanges: function () {
 			var oComponent = this.getOwnerComponent(),
 				oModel = this.getModel();
 			var that = this;
 			MessageBox.confirm(
 				this._oResourceBundle.getText("confirmCancelMessage"), {
 					styleClass: oComponent.getContentDensityClass(),
-					onClose: function(oAction) {
+					onClose: function (oAction) {
 						if (oAction === sap.m.MessageBox.Action.OK) {
 							that.getModel("appView").setProperty("/addEnabled", true);
 							oModel.resetChanges();
@@ -163,50 +143,10 @@ sap.ui.define([
 		},
 
 		/**
-		 * Prepares the view for editing the selected object
-		 * @param {sap.ui.base.Event} oEvent the  display event
-		 * @private
-		 */
-		_onEdit: function(oEvent) {
-			var oData = oEvent.getParameter("data"),
-				oView = this.getView();
-			this._oViewModel.setProperty("/mode", "edit");
-			this._oViewModel.setProperty("/enableCreate", true);
-			this._oViewModel.setProperty("/viewTitle", this._oResourceBundle.getText("editViewTitle"));
-
-			oView.bindElement({
-				path: oData.objectPath
-			});
-		},
-
-		/**
-		 * Prepares the view for creating new object
-		 * @param {sap.ui.base.Event} oEvent the  display event
-		 * @private
-		 */
-
-		_onCreate: function(oEvent) {
-			if (oEvent.getParameter("name") && oEvent.getParameter("name") !== "create") {
-				this._oViewModel.setProperty("/enableCreate", false);
-				this.getRouter().getTargets().detachDisplay(null, this._onDisplay, this);
-				this.getView().unbindObject();
-				return;
-			}
-
-			this._oViewModel.setProperty("/viewTitle", this._oResourceBundle.getText("createViewTitle"));
-			this._oViewModel.setProperty("/mode", "create");
-			var oContext = this._oODataModel.createEntry("SBOOKSet", {
-				success: this._fnEntityCreated.bind(this),
-				error: this._fnEntityCreationFailed.bind(this)
-			});
-			this.getView().setBindingContext(oContext);
-		},
-
-		/**
 		 * Checks if the save button can be enabled
 		 * @private
 		 */
-		_validateSaveEnablement: function() {
+		_validateSaveEnablement: function () {
 			var aInputControls = this._getFormFields(this.byId("newEntitySimpleForm"));
 			var oControl;
 			for (var m = 0; m < aInputControls.length; m++) {
@@ -227,8 +167,8 @@ sap.ui.define([
 		 * @private
 		 */
 
-		_checkForErrorMessages: function() {
-			var aMessages = this._oBinding.oModel.oData;
+		_checkForErrorMessages: function () {
+			var aMessages = this.getModel().oData;
 			if (aMessages.length > 0) {
 				var bEnableCreate = true;
 				for (var i = 0; i < aMessages.length; i++) {
@@ -247,10 +187,15 @@ sap.ui.define([
 		 * Handles the success of updating an object
 		 * @private
 		 */
-		_fnUpdateSuccess: function() {
+		_fnUpdateSuccess: function () {
 			this.getModel("appView").setProperty("/busy", false);
 			this.getView().unbindObject();
-			this.getRouter().getTargets().display("object");
+			this.getRouter().navTo("object", {
+					Connid: decodeURIComponent(oEvent.getParameter("arguments").Connid),
+					Carrid: decodeURIComponent(oEvent.getParameter("arguments").Carrid),
+					Fldate: decodeURIComponent(oEvent.getParameter("arguments").Fldate)
+			}, true);
+			// this.getRouter().getTargets().display("object");
 		},
 
 		/**
@@ -258,33 +203,26 @@ sap.ui.define([
 		 *@param {object} oData the response of the save action
 		 * @private
 		 */
-		_fnEntityCreated: function(oData) {
+		_fnEntityCreated: function (oData) {
+			console.log("Success");
 			var sObjectPath = this.getModel().createKey("SBOOKSet", oData);
 			this.getModel("appView").setProperty("/itemToSelect", "/" + sObjectPath); //save last created
 			this.getModel("appView").setProperty("/busy", false);
-			this.getRouter().getTargets().display("object");
+			var routingParams = {
+				Carrid: encodeURIComponent(oData.Carrid),
+				Connid: encodeURIComponent(oData.Connid),
+				Fldate: encodeURIComponent(oData.Fldate)
+			}
+			this.getRouter().navTo("object", routingParams, true);
 		},
 
 		/**
 		 * Handles the failure of creating/updating an object
 		 * @private
 		 */
-		_fnEntityCreationFailed: function() {
+		_fnEntityCreationFailed: function () {
+			console.log("Failed");
 			this.getModel("appView").setProperty("/busy", false);
-		},
-
-		/**
-		 * Handles the onDisplay event which is triggered when this view is displayed 
-		 * @param {sap.ui.base.Event} oEvent the on display event
-		 * @private
-		 */
-		_onDisplay: function(oEvent) {
-			var oData = oEvent.getParameter("data");
-			if (oData && oData.mode === "update") {
-				this._onEdit(oEvent);
-			} else {
-				this._onCreate(oEvent);
-			}
 		},
 
 		/**
@@ -292,7 +230,7 @@ sap.ui.define([
 		 * @param {sap.ui.layout.form} oSimpleForm the form in the view.
 		 * @private
 		 */
-		_getFormFields: function(oSimpleForm) {
+		_getFormFields: function (oSimpleForm) {
 			var aControls = [];
 			var aFormContent = oSimpleForm.getContent();
 			var sControlType;
@@ -309,5 +247,4 @@ sap.ui.define([
 			return aControls;
 		}
 	});
-
 });

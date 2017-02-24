@@ -79,11 +79,14 @@ sap.ui.define([
 		 */
 		onEdit: function () {
 			this.getModel("appView").setProperty("/addEnabled", false);
-			var sObjectPath = this.getView().getElementBinding().getPath();
-			this.getRouter().getTargets().display("create", {
-				mode: "update",
-				objectPath: sObjectPath
-			});
+			var oBindingContext = this.getView().getBindingContext();
+			var sObjectPath = oBindingContext.getPath();
+			var routingParams = {
+				Carrid: encodeURIComponent(oBindingContext.getProperty("Carrid")),
+				Connid: encodeURIComponent(oBindingContext.getProperty("Connid")),
+				Fldate: encodeURIComponent(oBindingContext.getProperty("Fldate")),
+			}
+			this.getRouter().navTo("create", routingParams, true);
 		},
 
 		/* =========================================================== */
@@ -133,6 +136,7 @@ sap.ui.define([
 					}
 				}
 			});
+			console.log(this.getView());
 		},
 
 		/**
