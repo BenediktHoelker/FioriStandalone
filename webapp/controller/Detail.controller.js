@@ -49,7 +49,6 @@ sap.ui.define([
 			);
 		},
 
-
 		/**
 		 * Updates the item count within the line item table's header
 		 * @param {object} oEvent an event containing the total number of items in the list
@@ -77,16 +76,41 @@ sap.ui.define([
 		 * @function
 		 * @public
 		 */
-		onEdit: function () {
+		onCreateBooking: function () {
 			this.getModel("appView").setProperty("/addEnabled", false);
 			var oBindingContext = this.getView().getBindingContext();
-			var sObjectPath = oBindingContext.getPath();
 			var routingParams = {
 				Carrid: encodeURIComponent(oBindingContext.getProperty("Carrid")),
 				Connid: encodeURIComponent(oBindingContext.getProperty("Connid")),
 				Fldate: encodeURIComponent(oBindingContext.getProperty("Fldate")),
 			}
-			this.getRouter().navTo("create", routingParams, true);
+			this.getRouter().navTo("createBooking", routingParams, true);
+		},
+
+		/**
+		 * Event handler (attached declaratively) for the view edit button. Open a view to enable the user update the selected item. 
+		 * @function
+		 * @public
+		 */
+		onEditBooking: function(oEvent) {
+			console.log("Edit Booking");
+			this.getModel("appView").setProperty("/addEnabled", false);
+			var oItem = oEvent.getSource();
+			var oBindingContext = oItem.getBindingContext();
+			// console.log(oBindingContext.getProperty("Bookid"));
+			// var bookingKeys = {
+			// 	Carrid: oBindingContext.getProperty("Carrid"),
+			// 	Connid: oBindingContext.getProperty("Connid"),
+			// 	Fldate: oBindingContext.getProperty("Fldate")
+			// }			
+			// console.log(bookingKeys);
+			// var bookingObjectPath = this.getModel().createKey("SFLIGHTSet", bookingKeys);
+			// this._bindView("/" + bookingObjectPath);
+			
+			this.getRouter().getTargets().display("createBooking", {
+				mode: "update",
+				objectPath: oBindingContext.getPath()
+			});
 		},
 
 		/* =========================================================== */
@@ -136,7 +160,6 @@ sap.ui.define([
 					}
 				}
 			});
-			console.log(this.getView());
 		},
 
 		/**
@@ -207,8 +230,5 @@ sap.ui.define([
 			// Restore original busy indicator delay for the detail view
 			oViewModel.setProperty("/delay", iOriginalViewBusyDelay);
 		}
-
 	});
-
-}
-);
+});

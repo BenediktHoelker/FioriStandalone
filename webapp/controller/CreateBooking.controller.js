@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, MessageBox) {
 	"use strict";
 
-	return BaseController.extend("ts.controller.CreateEntity", {
+	return BaseController.extend("ts.controller.CreateBooking", {
 
 		_oBinding: {},
 
@@ -25,7 +25,8 @@ sap.ui.define([
 				viewTitle: ""
 			});
 			this._oODataModel = this.getOwnerComponent().getModel();
-			this.getRouter().getRoute("create").attachPatternMatched(this._onObjectMatched, this);
+			this.getRouter().getRoute("createBooking").attachPatternMatched(this._onCreate, this);
+			this.getRouter().getTargets().getTarget("createBooking").attachDisplay(null, this._onEdit, this);
 			this.setModel(this._oODataModel, "oDataModel");
 		},
 
@@ -80,20 +81,55 @@ sap.ui.define([
 		/**
 			 * Binds the view to the object path and expands the aggregated line items.
 			 * @function
-			 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+			 * @param {sap.ui.base.Event} oEvent pattern match event in route 'create'
 			 * @private
 			 */
 		_onObjectMatched: function (oEvent) {
-			var oView = this.getView();
-			this._oViewModel.setProperty("/mode", "create");
+			var oData = oEvent.getParameter("data");
+			console.log(oEvent);
+			if (oData && oData.mode === "update") {
+				this._onEdit(oEvent);
+			} else {
+				this._onCreate(oEvent);
+			}
+		},
+
+		/**
+		 * Prepares the view for editing the selected object
+		 * @param {sap.ui.base.Event} oEvent the display event
+		 * @private
+		 */
+		_onEdit: function (oEvent) {
+			var oData = oEvent.getParameter("data"),
+				oView = this.getView();
+
+			this._oViewModel.setProperty("/mode", "edit");
 			this._oViewModel.setProperty("/enableCreate", true);
 			this._oViewModel.setProperty("/viewTitle", this._oResourceBundle.getText("editViewTitle"));
 
+			oView.bindElement({
+				path: oData.objectPath
+			});
+		},
+
+		/**
+		 * Prepares the view for creating new object
+		 * @param {sap.ui.base.Event} oEvent the  display event
+		 * @private
+		 */
+
+		_onCreate: function (oEvent) {
+			var oView = this.getView();
+			var urlArguments = oEvent.getParameter("arguments");
+			this._oViewModel.setProperty("/mode", "create");
+			this._oViewModel.setProperty("/enableCreate", true);
+			this._oViewModel.setProperty("/viewTitle", this._oResourceBundle.getText("createViewTitle"));
+
 			var oContext = this._oODataModel.createEntry("SBOOKSet", {
 				properties: {
-					Connid: decodeURIComponent(oEvent.getParameter("arguments").Connid),
-					Carrid: decodeURIComponent(oEvent.getParameter("arguments").Carrid),
-					Fldate: new Date(decodeURIComponent(oEvent.getParameter("arguments").Fldate))
+					Connid: decodeURIComponent(urlArguments.Connid),
+					Carrid: decodeURIComponent(urlArguments.Carrid),
+					Fldate: new Date(decodeURIComponent(urlArguments.Fldate))
 				},
 				success: this._fnEntityCreated.bind(this),
 				error: this._fnEntityCreationFailed.bind(this)
@@ -184,27 +220,12 @@ sap.ui.define([
 		},
 
 		/**
-		 * Handles the success of updating an object
-		 * @private
-		 */
-		_fnUpdateSuccess: function () {
-			this.getModel("appView").setProperty("/busy", false);
-			this.getView().unbindObject();
-			this.getRouter().navTo("object", {
-					Connid: decodeURIComponent(oEvent.getParameter("arguments").Connid),
-					Carrid: decodeURIComponent(oEvent.getParameter("arguments").Carrid),
-					Fldate: decodeURIComponent(oEvent.getParameter("arguments").Fldate)
-			}, true);
-			// this.getRouter().getTargets().display("object");
-		},
-
-		/**
 		 * Handles the success of creating an object
 		 *@param {object} oData the response of the save action
 		 * @private
 		 */
 		_fnEntityCreated: function (oData) {
-			console.log("Success");
+			console.log("Create Entity Success");
 			var sObjectPath = this.getModel().createKey("SBOOKSet", oData);
 			this.getModel("appView").setProperty("/itemToSelect", "/" + sObjectPath); //save last created
 			this.getModel("appView").setProperty("/busy", false);
@@ -221,7 +242,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_fnEntityCreationFailed: function () {
-			console.log("Failed");
+			console.log("Create Entity Failed");
 			this.getModel("appView").setProperty("/busy", false);
 		},
 

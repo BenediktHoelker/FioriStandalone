@@ -116,10 +116,9 @@
 				},
 				{
 					"pattern": "CreateBooking/{Carrid}/{Connid}/{Fldate}",
-					"name": "create",
+					"name": "createBooking",
 					"target": [
-						"object",
-						"create"
+						"createBooking"
 					]
 				}
 			],
@@ -135,9 +134,9 @@
 					"viewId": "detail",
 					"viewLevel": 2
 				},
-				"create": {
-					"viewName": "CreateEntity",
-					"viewId": "createEntity",
+				"createBooking": {
+					"viewName": "CreateBooking",
+					"viewId": "createBooking",
 					"viewLevel": 2
 				},
 				"detailObjectNotFound": {
