@@ -50,9 +50,9 @@
 		<semantic:editAction>
 			<semantic:EditAction id="edit" press="onCreateBooking"/>
 		</semantic:editAction>
-		<semantic:customFooterContent>
+		<!--<semantic:customFooterContent>
 			<Button enabled="true" id="deleteButton" press="onDelete" text="Delete"/>
-		</semantic:customFooterContent>
+		</semantic:customFooterContent>-->
 		<semantic:sendEmailAction>
 			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
 		</semantic:sendEmailAction>
