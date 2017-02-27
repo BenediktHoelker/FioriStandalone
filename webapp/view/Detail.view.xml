@@ -10,7 +10,7 @@
 					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}"></IconTabFilter>
 				</items>
 			</IconTabBar>
-			<List id="lineItemsList" width="auto"  items="{SBOOK}"
+			<!--<List id="lineItemsList" width="auto"  items="{SBOOK}"
 				busyIndicatorDelay="{detailView>/lineItemTableDelay}"  updateFinished="onListUpdateFinished" noDataText="{i18n>detailLineItemTableNoDataText}"> 
 				<infoToolbar>
 					<Toolbar id="lineItemsToolbar">
@@ -21,7 +21,31 @@
 					<ObjectListItem type="Active" press="onEditBooking" title="{Bookid} - {Passname}"
 						number="{ path: 'Loccuram', formatter: '.formatter.currencyValue'}"></ObjectListItem>
 				</items>
-			</List>
+			</List>-->
+			<Table id="lineItemsList" width="auto" items="{SBOOK}" updateFinished="onListUpdateFinished" mode="Delete" delete="onDelete"
+				noDataText="{i18n>detailLineItemTableNoDataText}" busyIndicatorDelay="{detailView>/lineItemTableDelay}" class="sapUiResponsiveMargin">
+				<headerToolbar>
+					<Toolbar id="lineItemsToolbar">
+						<Title id="lineItemsHeader" text="{detailView>/lineItemListTitle}"/>
+					</Toolbar>
+				</headerToolbar>
+				<columns>
+					<Column>
+						<Text text="{i18n>detailLineItemTableIDColumn}"/>
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+						<Text text="{i18n>detailLineItemTableUnitNumberColumn}"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem type="Navigation" press="onEditBooking">
+						<cells>
+							<ObjectIdentifier title="{Passname}" text="{Bookid}"/>
+							<ObjectNumber number="{ path: 'Loccuram', formatter: '.formatter.currencyValue' }" unit="{Loccurkey}"/>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
 		</semantic:content>
 		<semantic:editAction>
 			<semantic:EditAction id="edit" press="onCreateBooking"/>

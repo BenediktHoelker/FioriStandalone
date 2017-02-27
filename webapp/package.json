@@ -4,5 +4,6 @@
   "dependencies": {
     "http-proxy": "^1.11.2"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {}
 }

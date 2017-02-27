@@ -2,8 +2,10 @@
 sap.ui.define([
 	"ts/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"ts/model/formatter"
-], function (BaseController, JSONModel, formatter) {
+	"ts/model/formatter",
+	"sap/m/MessageBox",
+	"sap/m/MessageToast"
+], function (BaseController, JSONModel, formatter, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("ts.controller.Detail", {
@@ -25,10 +27,10 @@ sap.ui.define([
 			});
 
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
-
 			this.setModel(oViewModel, "detailView");
-
 			this.getOwnerComponent().getModel().metadataLoaded().then(this._onMetadataLoaded.bind(this));
+			this._oODataModel = this.getOwnerComponent().getModel();
+			this._oResourceBundle = this.getResourceBundle();
 		},
 
 		/* =========================================================== */
@@ -72,6 +74,34 @@ sap.ui.define([
 		},
 
 		/**
+		 * Event handler (attached declaratively) for the view delete button. Deletes the selected item. 
+		 * @function
+		 * @public
+		 */
+		onDelete: function (oEvent) {
+			console.log("Delete item");
+			var that = this;
+			var oViewModel = this.getModel("detailView"),
+				oItem = oEvent.getParameter("listItem"),
+				oBindingContext = oItem.getBindingContext(),
+				sPath = oBindingContext.getPath(),
+				sObjectHeader = this._oODataModel.getProperty(sPath + "/Bookid"),
+				sQuestion = this._oResourceBundle.getText("deleteText", sObjectHeader),
+				sSuccessMessage = this._oResourceBundle.getText("deleteSuccess", sObjectHeader);
+
+			console.log(sObjectHeader);
+			var fnMyAfterDeleted = function () {
+				MessageToast.show(sSuccessMessage);
+				oViewModel.setProperty("/busy", false);
+				var oNextItemToSelect = that.getOwnerComponent().oListSelector.findNextItem(sPath);
+				that.getModel("appView").setProperty("/itemToSelect", oNextItemToSelect.getBindingContext().getPath()); //save last deleted
+			};
+			this._confirmDeletionByUser({
+				question: sQuestion
+			}, [sPath], fnMyAfterDeleted);
+		},
+
+		/**
 		 * Event handler (attached declaratively) for the view edit button. Open a view to enable the user update the selected item. 
 		 * @function
 		 * @public
@@ -92,11 +122,11 @@ sap.ui.define([
 		 * @function
 		 * @public
 		 */
-		onEditBooking: function(oEvent) {
+		onEditBooking: function (oEvent) {
 			this.getModel("appView").setProperty("/addEnabled", false);
 			var oItem = oEvent.getSource();
 			var oBindingContext = oItem.getBindingContext();
-			
+
 			this.getRouter().navTo("editBooking", {
 				objectPath: encodeURIComponent(oBindingContext.getPath())
 			});
@@ -152,11 +182,10 @@ sap.ui.define([
 		},
 
 		/**
-	 * Event handler for binding change event
-	 * @function
-	 * @private
-	 */
-
+		 * Event handler for binding change event
+		 * @function
+		 * @private
+		 */
 		_onBindingChange: function () {
 			var oView = this.getView(),
 				oElementBinding = oView.getElementBinding(),
@@ -218,6 +247,87 @@ sap.ui.define([
 			oViewModel.setProperty("/busy", true);
 			// Restore original busy indicator delay for the detail view
 			oViewModel.setProperty("/delay", iOriginalViewBusyDelay);
+		},
+
+		/**
+		 * Opens a dialog letting the user either confirm or cancel the deletion of a list of entities
+		 * @param {object} oConfirmation - Possesses up to two attributes: question (obligatory) is a string providing the statement presented to the user.
+		 * title (optional) may be a string defining the title of the popup.
+		 * @param {object} oConfirmation - Possesses up to two attributes: question (obligatory) is a string providing the statement presented to the user.
+		 * @param {array} aPaths -  Array of strings representing the context paths to the entities to be deleted. Currently only one is supported.
+		 * @param {callback} fnAfterDeleted (optional) - called after deletion is done. 
+		 * @param {callback} fnDeleteCanceled (optional) - called when the user decides not to perform the deletion
+		 * @param {callback} fnDeleteConfirmed (optional) - called when the user decides to perform the deletion. A Promise will be passed
+		 * @function
+		 * @private
+		 */
+		/* eslint-disable */ // using more then 4 parameters for a function is justified here
+		_confirmDeletionByUser: function (oConfirmation, aPaths, fnAfterDeleted, fnDeleteCanceled, fnDeleteConfirmed) {
+			/* eslint-enable */
+			// Callback function for when the user decides to perform the deletion
+			var fnDelete = function () {
+				// Calls the oData Delete service
+				this._callDelete(aPaths, fnAfterDeleted);
+			}.bind(this);
+
+			// Opens the confirmation dialog
+			MessageBox.show(oConfirmation.question, {
+				icon: oConfirmation.icon || MessageBox.Icon.WARNING,
+				title: oConfirmation.title || this._oResourceBundle.getText("delete"),
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				onClose: function (oAction) {
+					if (oAction === MessageBox.Action.OK) {
+						fnDelete();
+					} else if (fnDeleteCanceled) {
+						fnDeleteCanceled();
+					}
+				}
+			});
+		},
+
+		/**
+		 * Performs the deletion of a list of entities.
+		 * @param {array} aPaths -  Array of strings representing the context paths to the entities to be deleted. Currently only one is supported.
+		 * @param {callback} fnAfterDeleted (optional) - called after deletion is done. 
+		 * @return a Promise that will be resolved as soon as the deletion process ended successfully.
+		 * @function
+		 * @private
+		 */
+		_callDelete: function (aPaths, fnAfterDeleted) {
+			var oViewModel = this.getModel("detailView");
+			oViewModel.setProperty("/busy", true);
+			var fnFailed = function () {
+				this._oODataModel.setUseBatch(true);
+			}.bind(this);
+			var fnSuccess = function () {
+				if (fnAfterDeleted) {
+					fnAfterDeleted();
+					this._oODataModel.setUseBatch(true);
+				}
+				oViewModel.setProperty("/busy", false);
+			}.bind(this);
+			return this._deleteOneEntity(aPaths[0], fnSuccess, fnFailed);
+		},
+
+		/**
+		 * Deletes the entity from the odata model
+		 * @param {array} aPaths -  Array of strings representing the context paths to the entities to be deleted. Currently only one is supported.
+		 * @param {callback} fnSuccess - Event handler for success operation.
+		 * @param {callback} fnFailed - Event handler for failure operation.
+		 * @function
+		 * @private
+		 */
+		_deleteOneEntity: function (sPath, fnSuccess, fnFailed) {
+			var oPromise = new Promise(function (fnResolve, fnReject) {
+				this._oODataModel.setUseBatch(false);
+				this._oODataModel.remove(sPath, {
+					success: fnResolve,
+					error: fnReject,
+					async: true
+				});
+			}.bind(this));
+			oPromise.then(fnSuccess, fnFailed);
+			return oPromise;
 		}
 	});
 });

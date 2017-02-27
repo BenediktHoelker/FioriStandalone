@@ -3,7 +3,7 @@ var http = require("http"),
     httpProxy = require('http-proxy'),
     path = require("path"),
     fs = require("fs"),
-    port = process.argv[2] || 8888,
+    port = 8888,
     ////////////////////////////////////////////////////////////////////////////
     // Adjust this settings to your needs for proxying the backend requests   //
     ////////////////////////////////////////////////////////////////////////////
