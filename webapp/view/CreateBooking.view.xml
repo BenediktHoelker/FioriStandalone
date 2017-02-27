@@ -11,7 +11,12 @@
 					<Label text="Kundennummer" required="true"/>
 					<Input name="Customid" id="Customid_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Customid', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:8, nullable:false } }"/>
 					<Label text="Klasse" required="true"/>
-					<Input name="Class" id="Class_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Class', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:1, nullable:false } }"/>
+					<ComboBox name="Class" items="{viewModel>/flightClasses}" id="Class_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Class', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:1, nullable:false } }">
+						<items>
+							<!-- No leading "/" here since the binding is relative to the aggregation binding below-->
+							<core:Item key="{viewModel>key}" text="{viewModel>text}"/>
+						</items>
+					</ComboBox>
 					<Label text="Reisebüronr." required="true"/>
 					<Input name="Agencynum" id="Agencynum_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Agencynum', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:8, nullable:false } }"/>
 					<Label text="Passagiername" required="true"/>

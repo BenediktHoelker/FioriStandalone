@@ -22,13 +22,19 @@ sap.ui.define([
 				delay: 0,
 				busy: false,
 				mode: "create",
-				viewTitle: ""
+				viewTitle: "",
+				flightClasses: [
+					{ key: "C", text: "Economy" },
+					{ key: "Y", text: "Business" },
+					{ key: "F", text: "First" }
+				]
 			});
 			this._oODataModel = this.getOwnerComponent().getModel();
 			this.getRouter().getRoute("createBooking").attachPatternMatched(this._onCreate, this);
 			this.getRouter().getRoute("editBooking").attachPatternMatched(this._onEdit, this);
 			// this.getRouter().getTargets().getTarget("editBooking").attachDisplay(null, this._onEdit, this);
-			this.setModel(this._oODataModel, "oDataModel");
+
+			this.setModel(this._oViewModel, "viewModel");
 		},
 
 		/* =========================================================== */
@@ -55,10 +61,10 @@ sap.ui.define([
 				return;
 			}
 			this.getModel("appView").setProperty("/busy", true);
-			
+
 			if (this._oViewModel.getProperty("/mode") === "edit") {
 				// attach to the request completed event of the batch
-				oModel.attachEventOnce("batchRequestCompleted", function(oEvent) {
+				oModel.attachEventOnce("batchRequestCompleted", function (oEvent) {
 					if (that._checkIfBatchRequestSucceeded(oEvent)) {
 						that._fnUpdateSuccess();
 					} else {
@@ -71,7 +77,7 @@ sap.ui.define([
 			oModel.submitChanges();
 		},
 
-		_checkIfBatchRequestSucceeded: function(oEvent) {
+		_checkIfBatchRequestSucceeded: function (oEvent) {
 			var oParams = oEvent.getParameters();
 			var aRequests = oEvent.getParameters().requests;
 			var oRequest;
@@ -254,7 +260,7 @@ sap.ui.define([
 		 * Handles the success of updating an object
 		 * @private
 		 */
-		_fnUpdateSuccess: function() {
+		_fnUpdateSuccess: function () {
 			this.getModel("appView").setProperty("/busy", false);
 			this.getView().unbindObject();
 			this.getRouter().getTargets().display("object");
