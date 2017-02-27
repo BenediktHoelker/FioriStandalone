@@ -93,8 +93,8 @@ sap.ui.define([
 			var fnMyAfterDeleted = function () {
 				MessageToast.show(sSuccessMessage);
 				oViewModel.setProperty("/busy", false);
-				var oNextItemToSelect = that.getOwnerComponent().oListSelector.findNextItem(sPath);
-				that.getModel("appView").setProperty("/itemToSelect", oNextItemToSelect.getBindingContext().getPath()); //save last deleted
+				// var oNextItemToSelect = that.getOwnerComponent().oListSelector.findNextItem(sPath);
+				// that.getModel("appView").setProperty("/itemToSelect", oNextItemToSelect.getBindingContext().getPath()); //save last deleted
 			};
 			this._confirmDeletionByUser({
 				question: sQuestion

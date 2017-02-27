@@ -243,28 +243,13 @@ sap.ui.define([
 		},
 
 		/**
-		 * Navigates back in the browser history, if the entry was created by this app.
-		 * If not, it navigates to the Fiori Launchpad home page
-		 * @override
-		 * @public
-		 */
-		onNavBack: function() {
-			var oHistory = sap.ui.core.routing.History.getInstance(),
-				sPreviousHash = oHistory.getPreviousHash(),
-				oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
-
-			if (sPreviousHash !== undefined) {
-				// The history contains a previous entry
+			 * Event handler for navigating back.
+			 * We navigate back in the browser historz
+			 * @public
+			 */
+			onNavBack : function() {
 				history.go(-1);
-			} else {
-				// Navigate back to FLP home
-				oCrossAppNavigator.toExternal({
-					target: {
-						shellHash: "#Shell-home"
-					}
-				});
-			}
-		},
+			},
 
 		/**
 		 * Event handler  (attached declaratively) called when the add button in the master view is pressed. it opens the create view.
