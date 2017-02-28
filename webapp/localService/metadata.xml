@@ -33,7 +33,7 @@
                     <PropertyRef Name="Fldate"/>
                     <PropertyRef Name="Bookid"/>
                 </Key>
-                <Property Name="Carrid" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Fluggesellschaft" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Carrid" sap:semantics="carrid" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Fluggesellschaft" sap:sortable="false" sap:filterable="false" sap:updatable="true"/>
                 <Property Name="Connid" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Flugnummer" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Fldate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:label="Flugdatum" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Bookid" Type="Edm.String" Nullable="false" MaxLength="8" sap:label="Buchungsnummer" sap:sortable="false" sap:filterable="false"/>
@@ -55,11 +55,24 @@
                 <Property Name="Passname" Type="Edm.String" Nullable="false" MaxLength="25" sap:label="Passagiername" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Passform" Type="Edm.String" Nullable="false" MaxLength="15" sap:label="Anrede" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
+            <EntityType Name="Carrier" m:HasStream="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Carrid"/>
+                </Key>
+                <Property Name="Carrid" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Airline"/>
+                <Property Name="CARRNAME" Type="Edm.String" MaxLength="20" sap:label="Airline"/>
+                <Property Name="CURRCODE" Type="Edm.String" MaxLength="5" sap:label="Airline Currency" sap:semantics="currency-code"/>
+                <Property Name="URL" Type="Edm.String" MaxLength="255" sap:label="URL" sap:semantics="url"/>
+                <Property Name="mimeType" Type="Edm.String" MaxLength="128" sap:label="MIME Type" sap:filterable="false"/>
+                <NavigationProperty Name="carrierFlights" Relationship="RMTSAMPLEFLIGHT.CarrierToFlight" FromRole="FromRole_CarrierToFlight" ToRole="ToRole_CarrierToFlight"/>
+                <NavigationProperty Name="carrierFlights_FW" Relationship="RMTSAMPLEFLIGHT.CarrierToFlight" FromRole="FromRole_CarrierToFlight" ToRole="ToRole_CarrierToFlight"/>
+            </EntityType>
             <Association Name="SFlight_SBook" sap:content-version="1" sap:label="SFlight">
                 <End Type="Z_SFLIGHT_SBOOK_HOE_SRV.SFLIGHT" Multiplicity="1" Role="FromRole_SFlight_SBook"/>
                 <End Type="Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK" Multiplicity="*" Role="ToRole_SFlight_SBook"/>
             </Association>
             <EntityContainer Name="Z_SFLIGHT_SBOOK_HOE_SRV_Entities" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Carrier" EntityType="Z_SFLIGHT_SBOOK_HOE_SRV.Carrier" sap:deletable="false" sap:searchable="true" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="SBOOKSet" EntityType="Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK" sap:deletable="false" sap:searchable="true" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="SFLIGHTSet" EntityType="Z_SFLIGHT_SBOOK_HOE_SRV.SFLIGHT" sap:deletable="false" sap:searchable="true" sap:pageable="false" sap:content-version="1"/>
                 <AssociationSet Name="SFlight_SBook_AssocSet" Association="Z_SFLIGHT_SBOOK_HOE_SRV.SFlight_SBook" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
@@ -67,6 +80,31 @@
                     <End EntitySet="SBOOKSet" Role="ToRole_SFlight_SBook"/>
                 </AssociationSet>
             </EntityContainer>
+            <Annotations Target="Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK/Carrid"
+				xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+					<Record>
+						<PropertyValue Property="Label" String="Carrid" />
+						<PropertyValue Property="CollectionPath" String="Carrid" />
+						<PropertyValue Property="SearchSupported" Bool="true" />
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+									<PropertyValue Property="LocalDataProperty"
+										PropertyPath="Carrid" />
+									<PropertyValue Property="ValueListProperty"
+										String="Carrid" />
+								</Record>
+								<Record
+									Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+									<PropertyValue Property="ValueListProperty"
+										String="CARRNAME" />
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
             <atom:link
                 xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_SRV/$metadata"/>
                 <atom:link
