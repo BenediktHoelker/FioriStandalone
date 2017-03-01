@@ -9,14 +9,15 @@
 	controllerName="ts.controller.CreateBooking">
 	<semantic:DetailPage id="page" navButtonPress="onNavBack" title="{viewModel>/viewTitle}" busy="{viewModel>/busy}">
 		<semantic:content>
-			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" title="{= ${viewModel>/mode} === 'edit'? 'Edit Z_SFLIGHT_SBOOK_HOE_SF_SRV.SBOOK': 'New Z_SFLIGHT_SBOOK_HOE_SF_SRV.SBOOK'}">
+			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" title="{= ${viewModel>/mode} === 'edit'? 
+			'Edit Booking': 'Create Booking'}">
 				<f:content>
 					<!--<Label text="Fluggesellschaft" required="true"/>-->
 					<smartField:SmartLabel labelFor="Carrid_id"/>
 					<smartField:SmartField value="{Carrid}" id="Carrid_id"/>
+					<smartField:SmartLabel labelFor="Conn_id"/>
+					<smartField:SmartField value="{Connid}" id="Conn_id"/>
 					<!--<Input name="Carrid" id="Carrid_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true" value="{ path: 'Carrid', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:3, nullable:false } }"/>-->
-					<Label text="Flugnummer" required="true"/>
-					<Input name="Connid" id="Connid_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true" value="{ path: 'Connid', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:4, nullable:false } }"/>
 					<Label text="Flugdatum" required="true"/>
 					<DatePicker name="Fldate" value="{ path: 'Fldate', type: 'sap.ui.model.type.DateTime'}" id="Fldate_id" type="DateTime" enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true"/>
 					<Label text="Kundennummer" required="true"/>
