@@ -42,7 +42,7 @@
     }
   ],
   "mockpreview": {
-    "mockUri": "/SFLIGHT_SBOOK/sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_SRV",
+    "mockUri": "/SFLIGHT_SBOOK/sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_SF_SRV",
     "metadataFilePath": "",
     "loadJSONFiles": false,
     "loadCustomRequests": false,
