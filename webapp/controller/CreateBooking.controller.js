@@ -183,13 +183,18 @@ sap.ui.define([
 		_navBack: function () {
 			var oHistory = sap.ui.core.routing.History.getInstance(),
 				sPreviousHash = oHistory.getPreviousHash();
-
+			var oBindingContext = this.getView().getBindingContext();
 			this.getView().unbindObject();
 			if (sPreviousHash !== undefined) {
 				// The history contains a previous entry
 				history.go(-1);
 			} else {
-				this.getRouter().getTargets().display("object");
+				var routingParams = {
+					Carrid: encodeURIComponent(oBindingContext.getProperty("Carrid")),
+					Connid: encodeURIComponent(oBindingContext.getProperty("Connid")),
+					Fldate: encodeURIComponent(oBindingContext.getProperty("Fldate")),
+				};
+				this.getRouter().navTo("object", routingParams, true);
 			}
 		},
 
@@ -305,7 +310,7 @@ sap.ui.define([
 			for (var i = 0; i < aFormContent.length; i++) {
 				sControlType = aFormContent[i].getMetadata().getName();
 				if (sControlType === "sap.m.Input" || sControlType === "sap.m.DateTimeInput" ||
-					sControlType === "sap.m.CheckBox" || sControlType ==="sap.m.ComboBox") {
+					sControlType === "sap.m.CheckBox" || sControlType === "sap.m.ComboBox") {
 					aControls.push({
 						control: aFormContent[i],
 						required: aFormContent[i - 1].getRequired && aFormContent[i - 1].getRequired()

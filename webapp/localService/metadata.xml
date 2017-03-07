@@ -30,7 +30,7 @@
             <Property Name="SeatsoccB" Type="Edm.Int32" Nullable="false" sap:label="Occupied bus." />
             <Property Name="SeatsmaxF" Type="Edm.Int32" Nullable="false" sap:label="Max. capacity 1st" />
             <Property Name="SeatsoccF" Type="Edm.Int32" Nullable="false" sap:label="Occupied 1st" />
-            <NavigationProperty Name="SBOOK" Relationship="Z_SFLIGHT_SBOOK_HOE_SF_SRV.Sflight_Sbook" FromRole="FromRole_Sflight_Sbook" ToRole="ToRole_Sflight_Sbook" />
+            <NavigationProperty Name="SBOOKS" Relationship="Z_SFLIGHT_SBOOK_HOE_SF_SRV.Sflight_Sbook" FromRole="FromRole_Sflight_Sbook" ToRole="ToRole_Sflight_Sbook" />
          </EntityType>
          <EntityType Name="SBOOK" sap:content-version="1">
             <Key>

@@ -22,7 +22,7 @@
 						number="{ path: 'Loccuram', formatter: '.formatter.currencyValue'}"></ObjectListItem>
 				</items>
 			</List>-->
-			<Table id="lineItemsList" width="auto" items="{SBOOK}" updateFinished="onListUpdateFinished" mode="Delete" delete="onDelete" swipe="onDelete"
+			<Table id="lineItemsList" width="auto" items="{path: 'SBOOKSet'}" updateFinished="onListUpdateFinished" mode="Delete" delete="onDelete" swipe="onDelete"
 				noDataText="{i18n>detailLineItemTableNoDataText}" busyIndicatorDelay="{detailView>/lineItemTableDelay}" class="sapUiResponsiveMargin">
 				<headerToolbar>
 					<Toolbar id="lineItemsToolbar">

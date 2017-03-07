@@ -11,12 +11,19 @@
 		},
 		"dataSources": {
 			"mainService": {
-				"uri": "http://localhost:8888/proxy/sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_SF_SRV",
+				"uri": "http://localhost:8888/proxy/sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_CORE_SRV",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0",
-					"localUri": "localService/metadata.xml"
+					"localUri": "localService/metadata.xml",
+					"annotations": [
+						"annotation0"
+					]
 				}
+			},
+			"annotation0": {
+				"type": "ODataAnnotation",
+				"uri": "./annotation0.xml"
 			}
 		},
 		"sourceTemplate": {
