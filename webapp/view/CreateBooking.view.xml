@@ -25,8 +25,6 @@
 					<Input name="Class" id="Class_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Class', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:1, nullable:false } }"/>
 					<smartField:SmartLabel labelFor="Agencynum_id"/>
 					<smartField:SmartField value="{Agencynum}" id="Agencynum_id"/>
-					<Label text="Passname" required="true"/>
-					<Input name="Passname" id="Passname_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Passname', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:255, nullable:false } }"/>
 					</f:content>
 			<f:customData>
 			    <core:CustomData key="w5g.dt.editable" value="false" id="__data25"/>
