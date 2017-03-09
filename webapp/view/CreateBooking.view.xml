@@ -9,7 +9,7 @@
 	controllerName="ts.controller.CreateBooking">
 	<semantic:DetailPage id="page" navButtonPress="onNavBack" title="{viewModel>/viewTitle}" busy="{viewModel>/busy}">
 		<semantic:content>
-			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" title="{= ${viewModel>/mode} === 'edit'? 
+			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" title="{= ${viewModel>/mode} === 'edit'? 
 			'Edit Booking': 'Create Booking'}">
 				<f:content>
 					<!--<Label text="Fluggesellschaft" required="true"/>-->

@@ -23,7 +23,11 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 				busy: false,
 				delay: 0,
-				lineItemListTitle: this.getResourceBundle().getText("detailLineItemTableHeading")
+				lineItemListTitle: this.getResourceBundle().getText("detailLineItemTableHeading"),
+				firstClass: 0,
+				businessClass: 0,
+				economyClass: 0,
+				countAll: 0
 			});
 
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
@@ -31,6 +35,15 @@ sap.ui.define([
 			this.getOwnerComponent().getModel().metadataLoaded().then(this._onMetadataLoaded.bind(this));
 			this._oODataModel = this.getOwnerComponent().getModel();
 			this._oResourceBundle = this.getResourceBundle();
+
+			// Create an object of filters
+			this._mFilters = {
+				"firstClass": [new sap.ui.model.Filter("Class", "EQ", "F")],
+				"businessClass": [new sap.ui.model.Filter("Class", "EQ", "C")],
+				"economyClass": [new sap.ui.model.Filter("Class", "EQ", "Y")],
+				"all": []
+			};
+
 		},
 
 		/* =========================================================== */
@@ -59,7 +72,8 @@ sap.ui.define([
 		onListUpdateFinished: function (oEvent) {
 			var sTitle,
 				iTotalItems = oEvent.getParameter("total"),
-				oViewModel = this.getModel("detailView");
+				oViewModel = this.getModel("detailView"),
+				sPath = this.getView().getBindingContext().getPath();
 
 			// only update the counter if the length is final
 			if (this.byId("lineItemsList").getBinding("items").isLengthFinal()) {
@@ -69,6 +83,33 @@ sap.ui.define([
 					//Display 'Line Items' instead of 'Line items (0)'
 					sTitle = this.getResourceBundle().getText("detailLineItemTableHeading");
 				}
+				// Get the count for all the products and set the value to 'countAll' property
+				this.getModel().read(sPath + "/SBOOKSet/$count", {
+					success: function (oData) {
+						oViewModel.setProperty("/countAll", oData);
+					}
+				});
+				// read the count for the firstClass filter
+				this.getModel().read(sPath + "/SBOOKSet/$count", {
+					success: function (oData) {
+						oViewModel.setProperty("/firstClass", oData);
+					},
+					filters: this._mFilters.firstClass
+				});
+				// read the count for the businessClass filter
+				this.getModel().read(sPath + "/SBOOKSet/$count", {
+					success: function (oData) {
+						oViewModel.setProperty("/businessClass", oData);
+					},
+					filters: this._mFilters.businessClass
+				});
+				// read the count for the economyClass filter
+				this.getModel().read(sPath + "/SBOOKSet/$count", {
+					success: function (oData) {
+						oViewModel.setProperty("/economyClass", oData);
+					},
+					filters: this._mFilters.economyClass
+				});
 				oViewModel.setProperty("/lineItemListTitle", sTitle);
 			}
 		},
@@ -131,6 +172,18 @@ sap.ui.define([
 				objectPath: encodeURIComponent(oBindingContext.getPath())
 			});
 		},
+
+		/**
+		 * Event handler when a filter tab gets pressed
+		 * @param {sap.ui.base.Event} oEvent the filter tab event
+		 * @public
+		 */
+		onQuickFilter: function (oEvent) {
+			var oBinding = this.byId("lineItemsList").getBinding("items"),
+				sKey = oEvent.getParameter("selectedKey");
+			oBinding.filter(this._mFilters[sKey]);
+		},
+
 
 		/* =========================================================== */
 		/* begin: internal methods                                     */

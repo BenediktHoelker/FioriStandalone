@@ -14,7 +14,7 @@
 			<!-- For client side filtering add this to the items attribute:  parameters: {operationMode: 'Client'}}" -->
 			<List id="list" items="{ path: '/SFLIGHTSet', sorter: { path: 'Fldate', descending: false }, groupHeaderFactory: '.createGroupHeader' }"
 				busyIndicatorDelay="{masterView>/delay}" noDataText="{masterView>/noDataText}"
-				mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true"
+				mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true" width="auto"
 				updateFinished="onUpdateFinished" selectionChange="onSelectionChange">
 				<infoToolbar>
 					<Toolbar active="true" id="filterBar" visible="{masterView>/isFilterBarVisible}" press="onOpenViewSettings">
@@ -24,7 +24,7 @@
 				<items>
 					<!--<ObjectListItem type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelectionChange" title="{Fldate}"
 						number="{= Math.round((${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}) / (${Seatsmax} + ${SeatsmaxB} + ${SeatsmaxF})*100) /100 }"></ObjectListItem>-->
-					<ObjectListItem type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelectionChange" title="{Fldate}"
+					<ObjectListItem type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelectionChange" title="{Carrid}{Connid}"
 					number="{= ${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}}"></ObjectListItem>
 				</items>
 			</List>

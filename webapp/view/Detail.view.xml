@@ -3,35 +3,35 @@
 	<semantic:DetailPage id="page" navButtonPress="onNavBack" showNavButton="{device>/system/phone}" title="{i18n>detailTitle}"
 		busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
 		<semantic:content>
-			<ObjectHeader id="objectHeader" title="{Carrid} - {Connid} - {Planetype} - {Fldate}" number="Available: Economy [{= ${Seatsmax} - ${Seatsocc}}], Business [{= ${SeatsmaxB} - ${SeatsoccB}}], First [{= ${SeatsmaxF} - ${SeatsoccF}}]"></ObjectHeader>
-			<IconTabBar id="iconTabBar" class="sapUiResponsiveContentPadding">
+			<ObjectHeader id="objectHeader" title="Flight No. {Carrid}{Connid} on {Fldate}"></ObjectHeader>
+			<IconTabBar id="iconTabBar" select="onQuickFilter" expandable="false" applyContentPadding="false">
 				<items>
 					<!--<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
 					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}"></IconTabFilter>-->
 					<IconTabFilter
-                  key="bookedSeats"
-                  showAll="true"
-                  count="{= ${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}}"
-                  text="Economy Class"/>
-               <IconTabSeparator/>
-               <IconTabFilter
-                  key="inStock"
-                  icon="sap-icon://message-success"
-                  iconColor="Positive"
-                  count="{worklistView>/inStock}"
-                  text="{i18n>WorklistFilterInStock}"/>
-               <IconTabFilter
-                  key="shortage"
-                  icon="sap-icon://message-warning"
-                  iconColor="Critical"
-                  count="{worklistView>/shortage}"
-                  text="{i18n>WorklistFilterShortage}"/>
-               <IconTabFilter
-                  key="outOfStock"
-                  icon="sap-icon://message-error"
-                  iconColor="Negative"
-                  count="{worklistView>/outOfStock}"
-                  text="{i18n>WorklistFilterOutOfStock}"/>
+							key="all"
+							showAll="true"
+							count="{detailView>/countAll}"
+							text="{i18n>FilterBookingsAll}"/>
+					<IconTabSeparator/>
+					<IconTabFilter
+							key="firstClass"
+							icon="{= (${SeatsmaxF} - ${detailView>/firstClass}) > 10 ? 'sap-icon://message-success' : (${SeatsmaxF} - ${detailView>/firstClass}) > 0 ? 'sap-icon://message-warning' : 'sap-icon://message-error'}"
+							iconColor="{= (${SeatsmaxF} - ${detailView>/firstClass}) > 10 ? 'Positive' : (${SeatsmaxF} - ${detailView>/firstClass}) > 0 ? 'Critical' : 'Negative'}"
+							count="{= ${SeatsmaxF} - ${detailView>/firstClass}}"
+							text="{i18n>FilterFirstClass}"/>
+					<IconTabFilter
+							key="businessClass"
+							icon="{= (${SeatsmaxB} - ${detailView>/businessClass}) > 10 ? 'sap-icon://message-success' : (${SeatsmaxB} - ${detailView>/businessClass}) > 0 ? 'sap-icon://message-warning' : 'sap-icon://message-error'}"
+							iconColor="{= (${SeatsmaxB} - ${detailView>/businessClass}) > 10 ? 'Positive' : (${SeatsmaxB} - ${detailView>/businessClass}) > 0 ? 'Critical' : 'Negative'}"
+							count="{= ${SeatsmaxB} - ${detailView>/businessClass}}"
+							text="{i18n>FilterBusinessClass}"/>
+					<IconTabFilter
+							key="economyClass"
+							icon="{= (${Seatsmax} - ${detailView>/economyClass}) > 10 ? 'sap-icon://message-success' : (${SeatsmaxB} - ${detailView>/businessClass}) > 0 ? 'sap-icon://message-warning' : 'sap-icon://message-error'}"
+							iconColor="{= (${Seatsmax} - ${detailView>/economyClass}) > 10 ? 'Positive' : (${Seatsmax} - ${detailView>/economyClass}) > 0 ? 'Critical' : 'Negative'}"
+							count="{= ${Seatsmax} - ${detailView>/economyClass}}"
+							text="{i18n>FilterEconomyClass}"/>
 				</items>
 			</IconTabBar>
 			<!--<List id="lineItemsList" width="auto"  items="{SBOOK}"
