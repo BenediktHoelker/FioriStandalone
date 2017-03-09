@@ -47,12 +47,15 @@
 				</items>
 			</Table>
 		</semantic:content>
-		<semantic:editAction>
-			<semantic:EditAction id="edit" press="onCreateBooking"/>
-		</semantic:editAction>
-		<!--<semantic:customFooterContent>
-			<Button enabled="true" id="deleteButton" press="onDelete" text="Delete"/>
-		</semantic:customFooterContent>-->
+		<!--<semantic:editAction>
+			<semantic:EditAction text="Book" press="onCreateBooking"/>
+		</semantic:editAction>-->
+		<semantic:customFooterContent>
+			<Button type="Emphasized" enabled="true" press="onCreateBooking" text="Book"/>
+		</semantic:customFooterContent>
+		<!--<semantic:positiveAction>
+					<semantic:PositiveAction text="Book" press="onCreateBooking"/>
+				</semantic:positiveAction>-->
 		<semantic:sendEmailAction>
 			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
 		</semantic:sendEmailAction>

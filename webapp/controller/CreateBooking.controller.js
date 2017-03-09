@@ -143,7 +143,6 @@ sap.ui.define([
 		 */
 		_onCreate: function (oEvent) {
 			var oView = this.getView();
-			oView.unbindObject();
 			var urlArguments = oEvent.getParameter("arguments");
 			this._oViewModel.setProperty("/mode", "create");
 			this._oViewModel.setProperty("/enableCreate", true);
@@ -255,9 +254,9 @@ sap.ui.define([
 		_fnUpdateSuccess: function () {
 			var oBindingContext = this.getView().getBindingContext();
 			var routingParams = {
-				Carrid: oBindingContext.getProperty("Carrid"),
-				Connid: oBindingContext.getProperty("Connid"),
-				Fldate: oBindingContext.getProperty("Fldate"),
+				Carrid: encodeURIComponent(oBindingContext.getProperty("Carrid")),
+				Connid: encodeURIComponent(oBindingContext.getProperty("Connid")),
+				Fldate: encodeURIComponent(oBindingContext.getProperty("Fldate")),
 			};
 			this.getModel("appView").setProperty("/busy", false);
 			var sObjectPath = this.getModel().createKey("/SFLIGHTSet", routingParams);
@@ -267,7 +266,7 @@ sap.ui.define([
 			// oBindingContext.getModel().refresh(true);
 			// .getModel().refresh()
 			// console.log(sObjectPath);
-			this.getView().unbindObject();
+			// this.getView().unbindObject();
 			this.getRouter().navTo("object", routingParams, true);
 		},
 
