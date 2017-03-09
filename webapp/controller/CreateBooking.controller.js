@@ -118,26 +118,12 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-			 * Binds the view to the object path and expands the aggregated line items.
-			 * @function
-			 * @param {sap.ui.base.Event} oEvent pattern match event in route 'create'
-			 * @private
-			 */
-		_onObjectMatched: function (oEvent) {
-			var oData = oEvent.getParameter("data");
-			if (oData && oData.mode === "update") {
-				this._onEdit(oEvent);
-			} else {
-				this._onCreate(oEvent);
-			}
-		},
-
-		/**
 		 * Prepares the view for editing the selected object
 		 * @param {sap.ui.base.Event} oEvent the display event
 		 * @private
 		 */
 		_onEdit: function (oEvent) {
+			this.getView().unbindObject();
 			var oData = oEvent.getParameter("arguments"),
 				oView = this.getView();
 
@@ -157,6 +143,7 @@ sap.ui.define([
 		 */
 		_onCreate: function (oEvent) {
 			var oView = this.getView();
+			oView.unbindObject();
 			var urlArguments = oEvent.getParameter("arguments");
 			this._oViewModel.setProperty("/mode", "create");
 			this._oViewModel.setProperty("/enableCreate", true);
