@@ -9,9 +9,9 @@
 					<!--<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
 					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}"></IconTabFilter>-->
 					<IconTabFilter
-                  key="economy"
+                  key="bookedSeats"
                   showAll="true"
-                  count="{= ${Seatsmax} - ${Seatsocc}}"
+                  count="{= ${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}}"
                   text="Economy Class"/>
                <IconTabSeparator/>
                <IconTabFilter
@@ -47,7 +47,7 @@
 				</items>
 			</List>-->
 			<Table id="lineItemsList" width="auto" items="{path: 'SBOOKSet'}" updateFinished="onListUpdateFinished" mode="Delete" delete="onDelete" swipe="onDelete"
-				noDataText="{i18n>detailLineItemTableNoDataText}" busyIndicatorDelay="{detailView>/lineItemTableDelay}" class="sapUiResponsiveMargin">
+				noDataText="{i18n>detailLineItemTableNoDataText}" busyIndicatorDelay="{detailView>/lineItemTableDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop">
 				<headerToolbar>
 					<Toolbar id="lineItemsToolbar">
 						<Title id="lineItemsHeader" text="{detailView>/lineItemListTitle}"/>
@@ -68,8 +68,8 @@
 					<ColumnListItem type="Navigation" press="onEditBooking">
 						<cells>
 							<ObjectIdentifier title="{Passname}" text="{Bookid}"/>
-							<ObjectNumber number="{ path: 'Loccuram', formatter: '.formatter.currencyValue' }" unit="{Loccurkey}"/>
 							<ObjectNumber number="{ path: 'Class' }"/>
+							<ObjectNumber number="{ path: 'Loccuram', formatter: '.formatter.currencyValue' }" unit="{Loccurkey}"/>
 						</cells>
 					</ColumnListItem>
 				</items>
