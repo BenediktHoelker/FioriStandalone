@@ -6,8 +6,32 @@
 			<ObjectHeader id="objectHeader" title="{Carrid} - {Connid} - {Planetype} - {Fldate}" number="Available: Economy [{= ${Seatsmax} - ${Seatsocc}}], Business [{= ${SeatsmaxB} - ${SeatsoccB}}], First [{= ${SeatsmaxF} - ${SeatsoccF}}]"></ObjectHeader>
 			<IconTabBar id="iconTabBar" class="sapUiResponsiveContentPadding">
 				<items>
-					<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
-					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}"></IconTabFilter>
+					<!--<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
+					<IconTabFilter id="iconTabBarFilter2" icon="sap-icon://attachment" tooltip="{i18n>detailIconTabBarAttachments}"></IconTabFilter>-->
+					<IconTabFilter
+                  key="economy"
+                  showAll="true"
+                  count="{= ${Seatsmax} - ${Seatsocc}}"
+                  text="Economy Class"/>
+               <IconTabSeparator/>
+               <IconTabFilter
+                  key="inStock"
+                  icon="sap-icon://message-success"
+                  iconColor="Positive"
+                  count="{worklistView>/inStock}"
+                  text="{i18n>WorklistFilterInStock}"/>
+               <IconTabFilter
+                  key="shortage"
+                  icon="sap-icon://message-warning"
+                  iconColor="Critical"
+                  count="{worklistView>/shortage}"
+                  text="{i18n>WorklistFilterShortage}"/>
+               <IconTabFilter
+                  key="outOfStock"
+                  icon="sap-icon://message-error"
+                  iconColor="Negative"
+                  count="{worklistView>/outOfStock}"
+                  text="{i18n>WorklistFilterOutOfStock}"/>
 				</items>
 			</IconTabBar>
 			<!--<List id="lineItemsList" width="auto"  items="{SBOOK}"
@@ -33,8 +57,11 @@
 					<Column>
 						<Text text="{i18n>detailLineItemTableIDColumn}"/>
 					</Column>
-					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
-						<Text text="{i18n>detailLineItemTableUnitNumberColumn}"/>
+					<Column minScreenWidth="Tablet" demandPopin="true">
+						<Text text="{i18n>detailLineItemTableClassColumn}"/>
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true">
+						<Text text="{i18n>detailLineItemTablePriceColumn}"/>
 					</Column>
 				</columns>
 				<items>
@@ -42,6 +69,7 @@
 						<cells>
 							<ObjectIdentifier title="{Passname}" text="{Bookid}"/>
 							<ObjectNumber number="{ path: 'Loccuram', formatter: '.formatter.currencyValue' }" unit="{Loccurkey}"/>
+							<ObjectNumber number="{ path: 'Class' }"/>
 						</cells>
 					</ColumnListItem>
 				</items>
