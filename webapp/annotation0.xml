@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+   <edmx:Reference Uri="http://nw740.w-hs.de:8000/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.Common.v1" />
+   </edmx:Reference>
+   <edmx:Reference Uri="http://nw740.w-hs.de:8000/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="Org.OData.Core.V1" />
+   </edmx:Reference>
+   <edmx:Reference Uri="http://nw740.w-hs.de:8000/sap/opu/odata/SAP/Z_SFLIGHT_SBOOK_HOE_CORE_SRV">
+      <edmx:Include Namespace="Z_SFLIGHT_SBOOK_HOE_CORE_SRV" />
+   </edmx:Reference>
+   <edmx:DataServices>
+      <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="z_sflight_sbook_hoe_anno_anno_md.v1">
+         <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Z_SFLIGHT_SBOOK_HOE_CORE_SRV.SBOOK/Carrid">
+            <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+               <Record Type="com.sap.vocabularies.Common.v1.ValueListType">
+                  <PropertyValue Property="CollectionPath" String="SCARRSet" />
+                  <PropertyValue Property="CollectionRoot" String="Z_SFLIGHT_SBOOK_HOE_CORE_SRV" />
+                  <PropertyValue Property="SearchSupported" Bool="true" />
+                  <PropertyValue Property="Parameters">
+                     <Collection>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterFilterOnly">
+                           <PropertyValue Property="ValueListProperty" String="Connid" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+                           <PropertyValue Property="ValueListProperty" String="Carrid" />
+                           <PropertyValue Property="LocalDataProperty" PropertyPath="Carrid" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                           <PropertyValue Property="ValueListProperty" String="Carrname" />
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Z_SFLIGHT_SBOOK_HOE_CORE_SRV.SBOOK/Connid">
+            <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+               <Record Type="com.sap.vocabularies.Common.v1.ValueListType">
+                  <PropertyValue Property="CollectionPath" String="SPFLISet" />
+                  <PropertyValue Property="CollectionRoot" String="Z_SFLIGHT_SBOOK_HOE_CORE_SRV" />
+                  <PropertyValue Property="SearchSupported" Bool="true" />
+                  <PropertyValue Property="Parameters">
+                     <Collection>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+                           <PropertyValue Property="ValueListProperty" String="Connid" />
+                           <PropertyValue Property="LocalDataProperty" PropertyPath="Connid" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                           <PropertyValue Property="ValueListProperty" String="Cityfrom" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                           <PropertyValue Property="ValueListProperty" String="Cityto" />
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Z_SFLIGHT_SBOOK_HOE_CORE_SRV.SBOOK/Fldate">
+            <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+               <Record Type="com.sap.vocabularies.Common.v1.ValueListType">
+                  <PropertyValue Property="CollectionPath" String="SFLIGHTSet" />
+                  <PropertyValue Property="CollectionRoot" String="Z_SFLIGHT_SBOOK_HOE_CORE_SRV" />
+                  <PropertyValue Property="SearchSupported" Bool="true" />
+                  <PropertyValue Property="Parameters">
+                     <Collection>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+                           <PropertyValue Property="ValueListProperty" String="Fldate" />
+                           <PropertyValue Property="LocalDataProperty" PropertyPath="Fldate" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterFilterOnly">
+                           <PropertyValue Property="ValueListProperty" String="Carrid" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                           <PropertyValue Property="ValueListProperty" String="Carrid" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterFilterOnly">
+                           <PropertyValue Property="ValueListProperty" String="Connid" />
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Z_SFLIGHT_SBOOK_HOE_CORE_SRV.SBOOK/Customid">
+            <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+               <Record Type="com.sap.vocabularies.Common.v1.ValueListType">
+                  <PropertyValue Property="CollectionPath" String="SCUSTOMSet" />
+                  <PropertyValue Property="CollectionRoot" String="Z_SFLIGHT_SBOOK_HOE_CORE_SRV" />
+                  <PropertyValue Property="SearchSupported" Bool="true" />
+                  <PropertyValue Property="Parameters">
+                     <Collection>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+                           <PropertyValue Property="ValueListProperty" String="Id" />
+                           <PropertyValue Property="LocalDataProperty" PropertyPath="Customid" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                           <PropertyValue Property="ValueListProperty" String="Name" />
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Z_SFLIGHT_SBOOK_HOE_CORE_SRV.SBOOK/Agencynum">
+            <Annotation Term="com.sap.vocabularies.Common.v1.ValueList">
+               <Record Type="com.sap.vocabularies.Common.v1.ValueListType">
+                  <PropertyValue Property="CollectionPath" String="STRAVELAGSet" />
+                  <PropertyValue Property="CollectionRoot" String="Z_SFLIGHT_SBOOK_HOE_CORE_SRV" />
+                  <PropertyValue Property="SearchSupported" Bool="true" />
+                  <PropertyValue Property="Parameters">
+                     <Collection>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterDisplayOnly">
+                           <PropertyValue Property="ValueListProperty" String="Name" />
+                        </Record>
+                        <Record Type="com.sap.vocabularies.Common.v1.ValueListParameterOut">
+                           <PropertyValue Property="ValueListProperty" String="Agencynum" />
+                           <PropertyValue Property="LocalDataProperty" PropertyPath="Agencynum" />
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

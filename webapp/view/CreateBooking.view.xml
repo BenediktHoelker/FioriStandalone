@@ -1,21 +1,30 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic" xmlns:smart="sap.ui.comp.smartfield" xmlns="sap.m" controllerName="ts.controller.CreateBooking">
+<mvc:View 
+	xmlns:core="sap.ui.core" 
+	xmlns="sap.m" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:f="sap.ui.layout.form" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:semantic="sap.m.semantic" 
+	xmlns:smartField="sap.ui.comp.smartfield" 
+	controllerName="ts.controller.CreateBooking">
 	<semantic:DetailPage id="page" navButtonPress="onNavBack" title="{viewModel>/viewTitle}" busy="{viewModel>/busy}">
 		<semantic:content>
-			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" title="{= ${viewModel>/mode} === 'edit'? 'Edit Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK': 'New Z_SFLIGHT_SBOOK_HOE_SRV.SBOOK'}">
-				<f:content><Label text="Fluggesellschaft" required="true"/>
-					<Input name="Carrid" id="Carrid_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true" value="{ path: 'Carrid', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:3, nullable:false } }"/>
-					<Label text="Flugnummer" required="true"/>
-					<Input name="Connid" id="Connid_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true" value="{ path: 'Connid', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:4, nullable:false } }"/>
-					<Label text="Flugdatum" required="true"/>
-					<DatePicker name="Fldate" value="{ path: 'Fldate', type: 'sap.ui.model.type.DateTime'}" id="Fldate_id" type="DateTime" enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true"/>
-					<Label text="Kundennummer" required="true"/>
-					<Input name="Customid" id="Customid_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Customid', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:8, nullable:false } }"/>
-					<Label text="Klasse" required="true"/>
+			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm" labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" title="{= ${viewModel>/mode} === 'edit'? 
+			'Edit Booking': 'Create Booking'}">
+				<f:content>
+					<!--<Label text="Fluggesellschaft" required="true"/>-->
+					<smartField:SmartLabel labelFor="Carrid_id"/>
+					<smartField:SmartField value="{Carrid}" id="Carrid_id" enabled="{= ${viewModel>/mode} === 'edit'? false: true}"/>
+					<smartField:SmartLabel labelFor="Conn_id"/>
+					<smartField:SmartField value="{Connid}" id="Conn_id" enabled="{= ${viewModel>/mode} === 'edit'? false: true}"/>
+					<smartField:SmartLabel labelFor="Fldate_id"/>
+					<smartField:SmartField value="{Fldate}" id="Fldate_id" enabled="{= ${viewModel>/mode} === 'edit'? false: true}"/>
+					<smartField:SmartLabel labelFor="Custom_id"/>
+					<smartField:SmartField value="{Customid}" id="Custom_id"/>
+					<Label text="Class" required="true"/>
 					<Input name="Class" id="Class_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Class', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:1, nullable:false } }"/>
-					<Label text="Reisebüronr." required="true"/>
-					<Input name="Agencynum" id="Agencynum_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Agencynum', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:8, nullable:false } }"/>
-					<Label text="Passagiername" required="true"/>
-					<Input name="Passname" id="Passname_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" visible="true" value="{ path: 'Passname', type: 'sap.ui.model.odata.type.String' , constraints:{ maxLength:25, nullable:false } }"/>
+					<smartField:SmartLabel labelFor="Agencynum_id"/>
+					<smartField:SmartField value="{Agencynum}" id="Agencynum_id"/>
 					</f:content>
 			<f:customData>
 			    <core:CustomData key="w5g.dt.editable" value="false" id="__data25"/>

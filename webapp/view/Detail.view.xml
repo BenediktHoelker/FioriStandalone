@@ -3,7 +3,7 @@
 	<semantic:DetailPage id="page" navButtonPress="onNavBack" showNavButton="{device>/system/phone}" title="{i18n>detailTitle}"
 		busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
 		<semantic:content>
-			<ObjectHeader id="objectHeader" title="{Carrid} - {Connid} - {Planetype} - {Fldate}" number="{= ${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}} Seats occupied"></ObjectHeader>
+			<ObjectHeader id="objectHeader" title="{Carrid} - {Connid} - {Planetype} - {Fldate}" number="Available: Economy [{= ${Seatsmax} - ${Seatsocc}}], Business [{= ${SeatsmaxB} - ${SeatsoccB}}], First [{= ${SeatsmaxF} - ${SeatsoccF}}]"></ObjectHeader>
 			<IconTabBar id="iconTabBar" class="sapUiResponsiveContentPadding">
 				<items>
 					<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
@@ -22,7 +22,7 @@
 						number="{ path: 'Loccuram', formatter: '.formatter.currencyValue'}"></ObjectListItem>
 				</items>
 			</List>-->
-			<Table id="lineItemsList" width="auto" items="{SBOOK}" updateFinished="onListUpdateFinished" mode="Delete" delete="onDelete"
+			<Table id="lineItemsList" width="auto" items="{path: 'SBOOKSet'}" updateFinished="onListUpdateFinished" mode="Delete" delete="onDelete" swipe="onDelete"
 				noDataText="{i18n>detailLineItemTableNoDataText}" busyIndicatorDelay="{detailView>/lineItemTableDelay}" class="sapUiResponsiveMargin">
 				<headerToolbar>
 					<Toolbar id="lineItemsToolbar">

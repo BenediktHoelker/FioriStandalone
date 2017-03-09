@@ -22,8 +22,10 @@
 					</Toolbar>
 				</infoToolbar>
 				<items>
+					<!--<ObjectListItem type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelectionChange" title="{Fldate}"
+						number="{= Math.round((${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}) / (${Seatsmax} + ${SeatsmaxB} + ${SeatsmaxF})*100) /100 }"></ObjectListItem>-->
 					<ObjectListItem type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelectionChange" title="{Fldate}"
-						number="{= Math.round((${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}) / (${Seatsmax} + ${SeatsmaxB} + ${SeatsmaxF})*100) /100 }"></ObjectListItem>
+					number="{= ${Seatsocc} + ${SeatsoccB} + ${SeatsoccF}}"></ObjectListItem>
 				</items>
 			</List>
 		</semantic:content>

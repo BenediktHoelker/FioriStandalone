@@ -22,13 +22,19 @@ sap.ui.define([
 				delay: 0,
 				busy: false,
 				mode: "create",
-				viewTitle: ""
+				viewTitle: "",
+				flightClasses: [
+					{ key: "C", text: "Economy" },
+					{ key: "Y", text: "Business" },
+					{ key: "F", text: "First" }
+				]
 			});
 			this._oODataModel = this.getOwnerComponent().getModel();
 			this.getRouter().getRoute("createBooking").attachPatternMatched(this._onCreate, this);
 			this.getRouter().getRoute("editBooking").attachPatternMatched(this._onEdit, this);
 			// this.getRouter().getTargets().getTarget("editBooking").attachDisplay(null, this._onEdit, this);
-			this.setModel(this._oODataModel, "oDataModel");
+
+			this.setModel(this._oViewModel, "viewModel");
 		},
 
 		/* =========================================================== */
@@ -55,10 +61,10 @@ sap.ui.define([
 				return;
 			}
 			this.getModel("appView").setProperty("/busy", true);
-			
+
 			if (this._oViewModel.getProperty("/mode") === "edit") {
 				// attach to the request completed event of the batch
-				oModel.attachEventOnce("batchRequestCompleted", function(oEvent) {
+				oModel.attachEventOnce("batchRequestCompleted", function (oEvent) {
 					if (that._checkIfBatchRequestSucceeded(oEvent)) {
 						that._fnUpdateSuccess();
 					} else {
@@ -71,7 +77,7 @@ sap.ui.define([
 			oModel.submitChanges();
 		},
 
-		_checkIfBatchRequestSucceeded: function(oEvent) {
+		_checkIfBatchRequestSucceeded: function (oEvent) {
 			var oParams = oEvent.getParameters();
 			var aRequests = oEvent.getParameters().requests;
 			var oRequest;
@@ -177,13 +183,18 @@ sap.ui.define([
 		_navBack: function () {
 			var oHistory = sap.ui.core.routing.History.getInstance(),
 				sPreviousHash = oHistory.getPreviousHash();
-
+			var oBindingContext = this.getView().getBindingContext();
 			this.getView().unbindObject();
 			if (sPreviousHash !== undefined) {
 				// The history contains a previous entry
 				history.go(-1);
 			} else {
-				this.getRouter().getTargets().display("object");
+				var routingParams = {
+					Carrid: encodeURIComponent(oBindingContext.getProperty("Carrid")),
+					Connid: encodeURIComponent(oBindingContext.getProperty("Connid")),
+					Fldate: encodeURIComponent(oBindingContext.getProperty("Fldate")),
+				};
+				this.getRouter().navTo("object", routingParams, true);
 			}
 		},
 
@@ -254,10 +265,23 @@ sap.ui.define([
 		 * Handles the success of updating an object
 		 * @private
 		 */
-		_fnUpdateSuccess: function() {
+		_fnUpdateSuccess: function () {
+			var oBindingContext = this.getView().getBindingContext();
+			var routingParams = {
+				Carrid: oBindingContext.getProperty("Carrid"),
+				Connid: oBindingContext.getProperty("Connid"),
+				Fldate: oBindingContext.getProperty("Fldate"),
+			};
 			this.getModel("appView").setProperty("/busy", false);
+			var sObjectPath = this.getModel().createKey("/SFLIGHTSet", routingParams);
+			// oBindingContext.getModel().getProperty(sObjectPath);
+			// var oModel = new sap.ui.model.odata.ODataModel(sObjectPath);
+			// sap.ui.getCore().setModel(oModel);
+			// oBindingContext.getModel().refresh(true);
+			// .getModel().refresh()
+			// console.log(sObjectPath);
 			this.getView().unbindObject();
-			this.getRouter().getTargets().display("object");
+			this.getRouter().navTo("object", routingParams, true);
 		},
 
 		/**
@@ -268,6 +292,8 @@ sap.ui.define([
 		_fnEntityCreated: function (oData) {
 			console.log("Create Entity Success");
 			var sObjectPath = this.getModel().createKey("SBOOKSet", oData);
+			var oBindingContext = this.getView().getBindingContext();
+			oBindingContext.getModel().refresh(true);
 			this.getModel("appView").setProperty("/itemToSelect", "/" + sObjectPath); //save last created
 			this.getModel("appView").setProperty("/busy", false);
 			var routingParams = {
@@ -299,7 +325,7 @@ sap.ui.define([
 			for (var i = 0; i < aFormContent.length; i++) {
 				sControlType = aFormContent[i].getMetadata().getName();
 				if (sControlType === "sap.m.Input" || sControlType === "sap.m.DateTimeInput" ||
-					sControlType === "sap.m.CheckBox") {
+					sControlType === "sap.m.CheckBox" || sControlType === "sap.m.ComboBox") {
 					aControls.push({
 						control: aFormContent[i],
 						required: aFormContent[i - 1].getRequired && aFormContent[i - 1].getRequired()
