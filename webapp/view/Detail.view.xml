@@ -3,7 +3,7 @@
 	<semantic:DetailPage id="page" navButtonPress="onNavBack" showNavButton="{device>/system/phone}" title="{i18n>detailTitle}"
 		busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
 		<semantic:content>
-			<ObjectHeader id="objectHeader" title="{Carrid} - {Connid} - {Planetype} - {Fldate}" number="Available: C[{= ${Seatsmax} - ${Seatsocc}}], Y[{= ${SeatsmaxB} - ${SeatsoccB}}], F[{= ${SeatsmaxF} - ${SeatsoccF}}]"></ObjectHeader>
+			<ObjectHeader id="objectHeader" title="{Carrid} - {Connid} - {Planetype} - {Fldate}" number="Available: Economy [{= ${Seatsmax} - ${Seatsocc}}], Business [{= ${SeatsmaxB} - ${SeatsoccB}}], First [{= ${SeatsmaxF} - ${SeatsoccF}}]"></ObjectHeader>
 			<IconTabBar id="iconTabBar" class="sapUiResponsiveContentPadding">
 				<items>
 					<IconTabFilter id="iconTabBarFilter1" icon="sap-icon://hint" tooltip="{i18n>detailIconTabBarInfo}"></IconTabFilter>
