@@ -1,8 +1,7 @@
 sap.ui.define([
 		"sap/ui/base/Object",
 		"sap/m/MessageBox",
-		"sap/m/MessageToast"
-	], function (UI5Object, MessageBox, MessageToast) {
+	], function (UI5Object, MessageBox) {
 		"use strict";
 
 		return UI5Object.extend("ts.controller.ErrorHandler", {
@@ -37,35 +36,7 @@ sap.ui.define([
 				}, this);
 			},
 
-			_extractError: function(sDetails) {
-				if (sDetails.responseText) {
-					var parsedJSError = null;
-					try {
-						parsedJSError = jQuery.sap.parseJS(sDetails.responseText);
-						} catch (err) {
-						return sDetails;
-						}
-						
-						if (parsedJSError && parsedJSError.error && parsedJSError.error.code) {
-						var strError = "";
-						//check if the error is from our backend error class
-						if (parsedJSError.error.code.split("/")[0] === "SY") {
-							var array = parsedJSError.error.innererror.errordetails;
-								for (var i = 0; i < array.length; i++) {
-									var innerText = array[i].message;
-									innerText = innerText.split("(")[1];
-									innerText = innerText.split(")")[0];
-									strError += String.fromCharCode("8226") + " " + innerText + "\n";
-								}
-							} else {
-								//if there is no message class found
-								return sDetails;
-							}
-							return strError;
-						}
-				}
-				return sDetails;
-			},
+
 
 			/**
 			 * Shows a {@link sap.m.MessageBox} when a service call has failed.
@@ -77,7 +48,12 @@ sap.ui.define([
 				if (this._bMessageOpen) {
 					return;
 				}
-				MessageToast.show(this._extractError(sDetails));
+				
+				/**
+				 * Only log technical errors to console
+				 */
+				console.log(sDetails);
+
 				/**
 				this._bMessageOpen = true;
 				MessageBox.error(

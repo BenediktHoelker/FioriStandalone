@@ -1,9 +1,10 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/m/MessageBox"
+	"sap/m/MessageBox",
+	"sap/m/MessageStrip"
 
-], function (BaseController, JSONModel, MessageBox) {
+], function (BaseController, JSONModel, MessageBox, MessageStrip) {
 	"use strict";
 
 	return BaseController.extend("ts.controller.CreateBooking", {
@@ -123,6 +124,9 @@ sap.ui.define([
 		 * @private
 		 */
 		_onEdit: function (oEvent) {
+			//Clean ErrorMessage if there is one
+			this._deleteOldErrorMsg();
+			
 			this.getView().unbindObject();
 			var oData = oEvent.getParameter("arguments"),
 				oView = this.getView();
@@ -142,6 +146,9 @@ sap.ui.define([
 		 * @private
 		 */
 		_onCreate: function (oEvent) {
+			//Clean ErrorMessage if there is one
+			this._deleteOldErrorMsg();
+
 			var oView = this.getView();
 			var urlArguments = oEvent.getParameter("arguments");
 			this._oViewModel.setProperty("/mode", "create");
@@ -291,12 +298,65 @@ sap.ui.define([
 		},
 
 		/**
+		 * Deletes all ErrorMessages attached to the createBooking View
+		 */
+		_deleteOldErrorMsg: function() {
+			var oOldErrMsg = sap.ui.getCore().byId("errMsg");
+
+			if (oOldErrMsg) {
+				oOldErrMsg.destroy();
+			}
+		},
+
+		/**
+		 * Extracts Error Msg from BAPI for Booking
+		 * @param {object} sDetails the detailed Error Object
+		 */
+		_extractError: function(sDetails) {
+			if (sDetails.responseText) {
+				var parsedJSError = null;
+				try {
+					parsedJSError = jQuery.sap.parseJS(sDetails.responseText);
+					} catch (err) {
+					return sDetails;
+					}
+					
+					if (parsedJSError && parsedJSError.error && parsedJSError.error.code) {
+					var strError = "";
+					//check if the error is from our backend error class
+					if (parsedJSError.error.code.split("/")[0] === "SY") {
+						var array = parsedJSError.error.innererror.errordetails;
+							for (var i = 0; i < array.length; i++) {
+								var innerText = array[i].message;
+								innerText = innerText.split("(")[1];
+								innerText = innerText.split(")")[0];
+								strError += String.fromCharCode("8226") + " " + innerText + "\n";
+							}
+						} else {
+							//if there is no message class found
+							return sDetails;
+						}
+						return strError;
+					}
+			}
+			return sDetails;
+		},
+
+		/**
 		 * Handles the failure of creating/updating an object
+		 * @param {object} oError the error object
 		 * @private
 		 */
-		_fnEntityCreationFailed: function () {
+		_fnEntityCreationFailed: function oError(oError) {
 			console.log("Create Entity Failed");
 			this.getModel("appView").setProperty("/busy", false);
+
+			var errText = this._extractError(oError);
+			var msgStrip = new sap.m.MessageStrip("errMsg", { text: errText, type: sap.ui.core.MessageType.Error, showIcon: true, showCloseButton: true});
+			var view = this.getView().byId("page");
+
+			view.addContent(msgStrip);
+
 		},
 
 		/**
