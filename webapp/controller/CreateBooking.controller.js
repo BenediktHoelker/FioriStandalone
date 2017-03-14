@@ -114,6 +114,11 @@ sap.ui.define([
 			}
 		},
 
+		onExit: function () {
+			// If there are ErrosLeft delete them before closing the view
+			this._deleteOldErrorMsg();
+		},
+
 		/* =========================================================== */
 		/* Internal functions
 		/* =========================================================== */
@@ -302,7 +307,7 @@ sap.ui.define([
 		 */
 		_deleteOldErrorMsg: function() {
 			var oOldErrMsg = sap.ui.getCore().byId("errMsg");
-
+			
 			if (oOldErrMsg) {
 				oOldErrMsg.destroy();
 			}
@@ -351,6 +356,10 @@ sap.ui.define([
 			console.log("Create Entity Failed");
 			this.getModel("appView").setProperty("/busy", false);
 
+			//Delete old MessageStrip if exists
+			this._deleteOldErrorMsg();
+			
+			//Create new MessageStrip
 			var errText = this._extractError(oError);
 			var msgStrip = new sap.m.MessageStrip("errMsg", { text: errText, type: sap.ui.core.MessageType.Error, showIcon: true, showCloseButton: true});
 			var view = this.getView().byId("page");
