@@ -120,7 +120,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onDelete: function (oEvent) {
-			console.log("Delete item");
 			var that = this;
 			var oViewModel = this.getModel("detailView"),
 				oItem = oEvent.getParameter("listItem"),
@@ -130,7 +129,6 @@ sap.ui.define([
 				sQuestion = this._oResourceBundle.getText("deleteText", sObjectHeader),
 				sSuccessMessage = this._oResourceBundle.getText("deleteSuccess", sObjectHeader);
 
-			console.log(sObjectHeader);
 			var fnMyAfterDeleted = function () {
 				MessageToast.show(sSuccessMessage);
 				oViewModel.setProperty("/busy", false);

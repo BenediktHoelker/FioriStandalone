@@ -36,13 +36,22 @@
       },
       "description": "SAPUI5 Test Resources"
     },
-    {
-      "path": "/SFLIGHT_SBOOK",
+    {    
+      "path": "/N74",
       "target": {
         "type": "destination",
-        "name": "SFLIGHT_SBOOK"
+        "name": "N74"
       },
-      "description": "SFlight SBook Service"
+      "description": "WHS"
+    },
+    {
+      "path": "/sap/bc/lrep",
+      "target": {
+        "type": "destination",
+        "name": "N74",
+        "entryPath": "/sap/bc/lrep"
+      },
+      "description": "N74"
     }
   ]
 }

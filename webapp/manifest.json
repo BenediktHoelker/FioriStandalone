@@ -11,7 +11,7 @@
 		},
 		"dataSources": {
 			"mainService": {
-				"uri": "http://localhost:8888/proxy/sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_CORE_SRV",
+				"uri": "/N74/sap/opu/odata/sap/Z_SFLIGHT_SBOOK_HOE_CORE_SRV/",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0",
@@ -48,7 +48,8 @@
 		},
 		"supportedThemes": [
 			"sap_hcb",
-			"sap_bluecrystal"
+			"sap_bluecrystal",
+			"sap_belize"
 		]
 	},
 	"sap.ui5": {

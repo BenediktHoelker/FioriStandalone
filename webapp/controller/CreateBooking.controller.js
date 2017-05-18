@@ -60,8 +60,8 @@ sap.ui.define([
 				);
 				return;
 			}
+			console.log(this._oViewModel);
 			this.getModel("appView").setProperty("/busy", true);
-
 			if (this._oViewModel.getProperty("/mode") === "edit") {
 				// attach to the request completed event of the batch
 				oModel.attachEventOnce("batchRequestCompleted", function (oEvent) {
@@ -73,7 +73,7 @@ sap.ui.define([
 					}
 				});
 			}
-
+			console.log(oModel);
 			oModel.submitChanges();
 		},
 
@@ -143,6 +143,7 @@ sap.ui.define([
 		 */
 		_onCreate: function (oEvent) {
 			var oView = this.getView();
+			this.getView().unbindObject();
 			var urlArguments = oEvent.getParameter("arguments");
 			this._oViewModel.setProperty("/mode", "create");
 			this._oViewModel.setProperty("/enableCreate", true);
@@ -266,7 +267,7 @@ sap.ui.define([
 			// oBindingContext.getModel().refresh(true);
 			// .getModel().refresh()
 			// console.log(sObjectPath);
-			// this.getView().unbindObject();
+			this.getView().unbindObject();
 			this.getRouter().navTo("object", routingParams, true);
 		},
 
