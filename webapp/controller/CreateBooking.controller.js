@@ -287,7 +287,7 @@ sap.ui.define([
 				Carrid: encodeURIComponent(oData.Carrid),
 				Connid: encodeURIComponent(oData.Connid),
 				Fldate: encodeURIComponent(oData.Fldate)
-			}
+			};
 			this.getRouter().navTo("object", routingParams, true);
 		},
 
